@@ -12,15 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUser = exports.getUsers = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getInfo = void 0;
 const database_1 = require("../database");
 const getInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let url = req.protocol + '://' + req.get('host') + req.originalUrl;
     return res.status(200).json({
         "mensaje": "Bienvenido",
         "status": 200,
         "endpoints": [
-            { "crearPersona": "http://localhost:4000/crearpersona" },
-            { "obtenerPersonas": "http://localhost:4000/personas" },
-            { "obtenerPersonaXid": "http://localhost:4000/personas/id_persona" },
-            { "actualizarPersona": "http://localhost:4000/personas/id_persona" },
-            { "borrarPersona": "http://localhost:4000/personas/id_persona" }
+            { "crearPersona": `${url}crearpersona` },
+            { "obtenerPersonas": `${url}personas` },
+            { "obtenerPersonaXid": `${url}personas/id_persona` },
+            { "actualizarPersona": `${url}personas/id_persona` },
+            { "borrarPersona": `${url}personas/id_persona` }
         ]
     });
 });
