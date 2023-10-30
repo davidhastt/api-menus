@@ -3,6 +3,23 @@ import { QueryResult } from "pg";
 import { pool } from "../database";
 
 
+export const getInfo=async(req:Request, res:Response):Promise<Response>=>{
+
+        return res.status(200).json({
+            "mensaje":"Bienvenido",
+            "status":200,
+            "endpoints":[
+                {"crearPersona":"http://localhost:4000/crearpersona"},
+                {"obtenerPersonas":"http://localhost:4000/personas"},
+                {"obtenerPersonaXid":"http://localhost:4000/personas/id_persona"},
+                {"actualizarPersona":"http://localhost:4000/personas/id_persona"},
+                {"borrarPersona":"http://localhost:4000/personas/id_persona"}
+
+            ]
+        });
+  
+}
+
 export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
     const id_persona = parseInt(req.params.id_persona);
     await pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
