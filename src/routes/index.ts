@@ -1,9 +1,10 @@
 import {Router} from 'express';
 const router = Router();
 
-import { getUsers, getUserById, createUser, deleteUser, updateUser, getInfo} from "../controllers/index.controler";
+import { getUsers, getUserById, createUser, deleteUser, updateUser, getInfo, pruebaConexionDB} from "../controllers/index.controler";
 
 router.get('/', getInfo);
+router.get('/prueba', pruebaConexionDB);
 router.get('/personas', getUsers);
 router.get('/personas/:id_persona', getUserById);
 router.post('/crearpersona', createUser);

@@ -9,14 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.getUsers = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getInfo = void 0;
+exports.createUser = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = exports.pruebaConexionDB = exports.getInfo = void 0;
 const database_1 = require("../database");
+//no olvides ponerles try, catch
 const getInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
     return res.status(200).json({
         "mensaje": "Bienvenido",
         "status": 200,
         "endpoints": [
+            { "pruebaConexionDB": `${url}prueba` },
             { "crearPersona": `${url}crearpersona` },
             { "obtenerPersonas": `${url}personas` },
             { "obtenerPersonaXid": `${url}personas/id_persona` },
@@ -26,6 +28,30 @@ const getInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.getInfo = getInfo;
+const pruebaConexionDB = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield database_1.pool.query('SELECT NOW()');
+        console.log("Conexion exitosa");
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
+    }
+});
+exports.pruebaConexionDB = pruebaConexionDB;
+const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield database_1.pool.query('SELECT * FROM public.personas');
+        console.log(response.rows);
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
+    }
+});
+exports.getUsers = getUsers;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id_persona = parseInt(req.params.id_persona);
     yield database_1.pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
@@ -49,18 +75,6 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     return res.json(response.rows);
 });
 exports.getUserById = getUserById;
-const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield database_1.pool.query('SELECT * FROM public.personas');
-        console.log(response.rows);
-        return res.status(200).json(response.rows);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
-    }
-});
-exports.getUsers = getUsers;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono } = req.body;
     try {

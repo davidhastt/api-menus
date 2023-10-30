@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { QueryResult } from "pg";
 import { pool } from "../database";
+//no olvides ponerles try, catch
 
-
-export const getInfo=async(req:Request, res:Response):Promise<Response>=>{
+export const getInfo=async(req:Request, res:Response):Promise<Response>=>{//no es necesario actualizar esta funcion
 
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
 
@@ -11,6 +11,7 @@ export const getInfo=async(req:Request, res:Response):Promise<Response>=>{
             "mensaje":"Bienvenido",
             "status":200,
             "endpoints":[
+                {"pruebaConexionDB":`${url}prueba`},
                 {"crearPersona":`${url}crearpersona`},
                 {"obtenerPersonas":`${url}personas`},
                 {"obtenerPersonaXid":`${url}personas/id_persona`},
@@ -22,6 +23,35 @@ export const getInfo=async(req:Request, res:Response):Promise<Response>=>{
 
         
   
+}
+
+export const pruebaConexionDB= async(req:Request, res:Response): Promise<Response>=>{
+    try{
+        const response: QueryResult= await pool.query('SELECT NOW()');
+        console.log("Conexion exitosa");                
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
+        
+    }
+    
+}
+
+
+
+export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
+    try{
+        const response: QueryResult= await pool.query('SELECT * FROM public.personas');
+        console.log(response.rows);
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
+    }
+    
 }
 
 export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
@@ -52,20 +82,6 @@ export const getUserById=async (req:Request, res:Response): Promise<Response>=>{
     return res.json(response.rows);
 }
 
-
-
-export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
-    try{
-        const response: QueryResult= await pool.query('SELECT * FROM public.personas');
-        console.log(response.rows);
-        return res.status(200).json(response.rows);
-    }
-    catch(e){
-        console.log(e);
-        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
-    }
-    
-}
 
 export const createUser=async (req:Request, res:Response): Promise<Response>=>{
     const {id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono}=req.body;
