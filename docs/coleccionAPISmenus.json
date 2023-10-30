@@ -1,0 +1,135 @@
+{
+	"info": {
+		"_postman_id": "cae0a5f0-d810-4d60-83ae-6fa79ed83b70",
+		"name": "Menus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23162765"
+	},
+	"item": [
+		{
+			"name": "crearPersona",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id_tienda\": 1,\r\n    \"tipo\": 1,\r\n    \"nombre\":\"David\",\r\n    \"apaterno\":\"Gomez\",\r\n    \"amaterno\":\"Millan\",\r\n    \"fechaNac\": \"20/05/1982\",\r\n    \"telefono\": \"7229879826\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/crearpersona",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"crearpersona"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "obtenerPersonas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/personas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"personas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "obtenerPersona por id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/personas/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"personas",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "actualizar persona",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"id_tienda\": 2,\r\n        \"tipo\": 2,\r\n        \"nombre\": \"German\",\r\n        \"apaterno\": \"Millan\",\r\n        \"amaterno\": \"Gomez\",\r\n        \"fechaNac\": \"1981-05-20T06:00:00.000Z\",\r\n        \"telefono\": \"7223134566\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/personas/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"personas",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "borrar persona",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/personas/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"personas",
+						"4"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
