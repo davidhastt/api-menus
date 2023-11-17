@@ -1,7 +1,6 @@
 import { Pool } from "pg";
-import {config} from 'dotenv';
-
-config();
+/*import {config} from 'dotenv';
+config();*/
 
 
 //si se desarrolla en entorno local activa este bloque de codigo
