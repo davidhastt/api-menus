@@ -19,9 +19,10 @@ export const pool = new Pool({
 
 //external url de render
 
+//en el video vuelve a llenar esto
 export const pool = new Pool({
     user:'davidmillan',
-    host:'dpg-ckuhmr237rbc738ccnq0-a',
+    host:'dpg-ckuhmr237rbc738ccnq0-a.oregon-postgres.render.com',
     password: 'D3zujgTZLkwBCPSowXCPzLBqFAEi27m8',
     database: 'menusdb',
     port: 5432
