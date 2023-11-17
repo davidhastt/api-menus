@@ -11,4 +11,4 @@ app.use(express_1.default.json()); //convertir datos en objetos json
 app.use(express_1.default.urlencoded({ extended: false })); //convertir datos de formularios html en objetos json
 app.use(index_1.default);
 app.listen(4000);
-console.log('Servidor en 4000');
+console.log('NodeJS esta corriendo un api restful en el puerto 4000');
