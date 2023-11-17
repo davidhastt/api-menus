@@ -13,4 +13,4 @@ app.use(indexRoutes);
 
 
 app.listen(4000);
-console.log('NodeJS esta corriendo un apirestful en el puerto 4000');
+console.log('NodeJS en 4000');
