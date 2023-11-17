@@ -12,5 +12,5 @@ app.use(express.urlencoded({extended:false}));//convertir datos de formularios h
 app.use(indexRoutes);
 
 
-app.listen(4000);
+app.listen(3000);
 console.log('NodeJS en 4000');
