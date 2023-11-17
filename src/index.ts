@@ -12,4 +12,4 @@ app.use(express.urlencoded({extended:false}));//convertir datos de formularios h
 app.use(indexRoutes);
 
 app.listen(4000);
-console.log('Servidor en 4000');
+console.log('NodeJS esta corriendo un apirestful en el puerto 4000');
