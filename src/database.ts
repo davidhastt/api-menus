@@ -5,6 +5,7 @@ config();
 
 
 //si se desarrolla en entorno local activa este bloque de codigo
+/*
 export const pool = new Pool({
     user:'postgres',
     host:'localhost',
@@ -13,11 +14,11 @@ export const pool = new Pool({
     port: 5432,
     ssl:true
 });
-
+*/
 
 
 //external url de render
-/*
+
 export const pool = new Pool({
     user:'davidmillan',
     host:'dpg-ckuhmr237rbc738ccnq0-a',
@@ -25,7 +26,7 @@ export const pool = new Pool({
     database: 'menusdb',
     port: 5432
 });
-*/
+
 
 
 
