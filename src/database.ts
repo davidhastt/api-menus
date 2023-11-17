@@ -16,6 +16,13 @@ export const pool = new Pool({
 */
 
 
+
+
+
+
+
+
+
 //external url de render
 
 //en el video vuelve a llenar esto
