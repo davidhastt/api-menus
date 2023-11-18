@@ -1,9 +1,10 @@
 import { Pool } from "pg";
-/*import {config} from 'dotenv';
-config();*/
+//import {config} from 'dotenv';
+//config();
 
 
 //si se desarrolla en entorno local activa este bloque de codigo
+
 /*
 export const pool = new Pool({
     user:'postgres',
@@ -25,7 +26,6 @@ export const pool = new Pool({
 
 //external url de render
 
-//en el video vuelve a llenar esto
 export const pool = new Pool({
     user:'davidmillan',
     host:'dpg-ckuhmr237rbc738ccnq0-a.oregon-postgres.render.com',
@@ -34,7 +34,5 @@ export const pool = new Pool({
     port: 5432,
     ssl:true
 });
-
-
 
 
