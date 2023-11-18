@@ -22,5 +22,6 @@ exports.pool = new pg_1.Pool({
     host: 'dpg-ckuhmr237rbc738ccnq0-a.oregon-postgres.render.com',
     password: 'D3zujgTZLkwBCPSowXCPzLBqFAEi27m8',
     database: 'menusdb',
-    port: 5432
+    port: 5432,
+    ssl: true
 });
