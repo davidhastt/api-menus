@@ -10,4 +10,5 @@ router.get('/personas/:id_persona', index_controler_1.getUserById);
 router.post('/crearpersona', index_controler_1.createUser);
 router.delete('/personas/:id_persona', index_controler_1.deleteUser);
 router.put('/personas/:id_persona', index_controler_1.updateUser);
+router.get('/gettiendasxcercania', index_controler_1.getTiendasXcercania);
 exports.default = router;

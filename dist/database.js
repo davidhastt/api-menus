@@ -10,9 +10,7 @@ export const pool = new Pool({
     user:'postgres',
     host:'localhost',
     password: 'davitzoL18',
-    database: 'menusdb',
-    port: 5432,
-    ssl:true
+    database: 'menusdb'
 });
 */
 //external url de render

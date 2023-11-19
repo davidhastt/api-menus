@@ -1,7 +1,7 @@
 import {Router} from 'express';
 const router = Router();
 
-import { getUsers, getUserById, createUser, deleteUser, updateUser, getInfo, pruebaConexionDB} from "../controllers/index.controler";
+import { getUsers, getUserById, createUser, deleteUser, updateUser, getInfo, pruebaConexionDB, getTiendasXcercania} from "../controllers/index.controler";
 
 router.get('/', getInfo);
 router.get('/prueba', pruebaConexionDB);
@@ -11,5 +11,7 @@ router.post('/crearpersona', createUser);
 router.delete('/personas/:id_persona', deleteUser);
 router.put('/personas/:id_persona', updateUser)
 
+
+router.get('/gettiendasxcercania', getTiendasXcercania);
 
 export default router;
