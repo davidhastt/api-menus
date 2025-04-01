@@ -3,6 +3,27 @@ import { QueryResult } from "pg";
 import { pool } from "../database";
 //no olvides ponerles try, catch
 
+export const info=async(req:Request, res:Response):Promise<Response>=>{
+
+    let url = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+        return res.status(200).json({
+            "mensaje":"Bienvenido, estos son los endpoints disponibles para manejar personas",
+            "status":200,
+            "endpoints":[
+                {"personas":`${url}`},
+                {"personas all":`${url}all`},
+                {"crearpersona":`${url}crearpersona`},
+                {"persona x id":`${url}id_persona`},
+                {"persona update":`${url}id_persona`}
+                
+            ]
+        });
+
+        
+  
+}
+
 
 
 export const getUsers= async(req:Request, res:Response): Promise<Response>=>{

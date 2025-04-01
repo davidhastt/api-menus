@@ -9,9 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = void 0;
+exports.createUser = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = exports.info = void 0;
 const database_1 = require("../database");
 //no olvides ponerles try, catch
+const info = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let url = req.protocol + '://' + req.get('host') + req.originalUrl;
+    return res.status(200).json({
+        "mensaje": "Bienvenido, estos son los endpoint disponibles para manejar personas",
+        "status": 200,
+        "endpoints": [
+            { "personas": `${url}` },
+            { "personas all": `${url}all` },
+            { "crearpersona": `${url}crearpersona` },
+            { "persona x id": `${url}id_persona` },
+            { "persona update": `${url}id_persona` }
+        ]
+    });
+});
+exports.info = info;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield database_1.pool.query('SELECT * FROM public.personas');

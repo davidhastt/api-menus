@@ -17,7 +17,7 @@ const getInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         "mensaje": "Bienvenido",
         "status": 200,
         "endpoints": [
-            { "pruebaConexionx": `${url}pruebaConexion` }
+            { "pruebaConexion": `${url}pruebaConexion` }
         ]
     });
 });
