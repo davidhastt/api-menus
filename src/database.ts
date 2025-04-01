@@ -5,14 +5,16 @@ import { Pool } from "pg";
 
 //si se desarrolla en entorno local activa este bloque de codigo
 
-/*
+
 export const pool = new Pool({
     user:'postgres',
     host:'localhost',
-    password: 'davitzoL18',
-    database: 'menusdb'
+    password: 'postgresx',
+    database: 'sihca',
+    port: 5432,
+    //ssl:true
 });
-*/
+
 
 
 
@@ -22,7 +24,7 @@ export const pool = new Pool({
 
 
 //external url de render
-
+/*
 export const pool = new Pool({
     user:'davidmillan',
     host:'dpg-ckuhmr237rbc738ccnq0-a.oregon-postgres.render.com',
@@ -32,4 +34,4 @@ export const pool = new Pool({
     ssl:true
 });
 
-
+*/
