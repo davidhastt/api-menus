@@ -9,24 +9,54 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = exports.info = void 0;
+exports.createUser = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = exports.pruebaConexionDB = exports.getInfo = exports.getTiendasXcercania = void 0;
 const database_1 = require("../database");
 //no olvides ponerles try, catch
-const info = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getTiendasXcercania = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let query = 'SELECT *' +
+        'FROM tiendas ' +
+        'INNER JOIN ubicaciones ' +
+        'ON tiendas.id_tienda =ubicaciones.id_tp ' +
+        'WHERE ST_DWithin(ubicaciones.xy, ST_SetSRID(ST_MakePoint(-99.67688542843177, 19.28662076007736), 4326), 0.10);';
+    try {
+        const response = yield database_1.pool.query(query);
+        console.log(response.rows);
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
+    }
+});
+exports.getTiendasXcercania = getTiendasXcercania;
+const getInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
     return res.status(200).json({
-        "mensaje": "Bienvenido, estos son los endpoints disponibles para manejar personas",
+        "mensaje": "Bienvenido",
         "status": 200,
         "endpoints": [
-            { "personas": `${url}` },
-            { "personas all": `${url}all` },
-            { "crearpersona": `${url}crearpersona` },
-            { "persona x id": `${url}id_persona` },
-            { "persona update": `${url}id_persona` }
+            { "pruebaConexionDB": `${url}prueba` },
+            { "crearPersona": `${url}crearpersona` },
+            { "obtenerPersonas": `${url}personas` },
+            { "obtenerPersonaXid": `${url}personas/id_persona` },
+            { "actualizarPersona": `${url}personas/id_persona` },
+            { "borrarPersona": `${url}personas/id_persona` }
         ]
     });
 });
-exports.info = info;
+exports.getInfo = getInfo;
+const pruebaConexionDB = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield database_1.pool.query('SELECT NOW()');
+        console.log("Conexion exitosa");
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
+    }
+});
+exports.pruebaConexionDB = pruebaConexionDB;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield database_1.pool.query('SELECT * FROM public.personas');

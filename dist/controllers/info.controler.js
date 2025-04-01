@@ -14,10 +14,11 @@ const database_1 = require("../database");
 const getInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
     return res.status(200).json({
-        "mensaje": "Bienvenido",
+        "mensaje": "Bienvenido, esta api contiene varios grupos de endpoints, los cuales se muestran a continuación",
         "status": 200,
         "endpoints": [
-            { "pruebaConexion": `${url}pruebaConexion` }
+            { "pruebaConexion": `${url}pruebaConexion` },
+            { "personas": `${url}personas` }
         ]
     });
 });
