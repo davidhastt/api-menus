@@ -1,4 +1,3 @@
-CREATE DATABASE firstapi;
 
 CREATE TABLE public.personas
 (
@@ -8,7 +7,7 @@ CREATE TABLE public.personas
     nombre character varying(200) NOT NULL,
     apaterno character varying(200) NOT NULL,
     amaterno character varying(200) NOT NULL,
-    "fechaNac" date NOT NULL,
+    fechaNac date NOT NULL,
     telefono character varying(10) NOT NULL,
     PRIMARY KEY (id_persona)
 )
@@ -16,4 +15,4 @@ CREATE TABLE public.personas
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.personas
-    OWNER to davidmillan;
+    OWNER to postgres;

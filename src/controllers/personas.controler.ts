@@ -12,10 +12,10 @@ export const info=async(req:Request, res:Response):Promise<Response>=>{
             "status":200,
             "endpoints":[
                 {"personas":`${url}`},
-                {"personas all":`${url}all`},
-                {"crearpersona":`${url}crearpersona`},
-                {"persona x id":`${url}id_persona`},
-                {"persona update":`${url}id_persona`}
+                {"personas all":`${url}/all`},
+                {"crearpersona":`${url}/crearpersona`},
+                {"persona x id":`${url}/id_persona`},
+                {"persona update":`${url}/id_persona`}
                 
             ]
         });

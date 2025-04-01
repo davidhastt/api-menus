@@ -19,10 +19,10 @@ const info = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         "status": 200,
         "endpoints": [
             { "personas": `${url}` },
-            { "personas all": `${url}all` },
-            { "crearpersona": `${url}crearpersona` },
-            { "persona x id": `${url}id_persona` },
-            { "persona update": `${url}id_persona` }
+            { "personas all": `${url}/all` },
+            { "crearpersona": `${url}/crearpersona` },
+            { "persona x id": `${url}/id_persona` },
+            { "persona update": `${url}/id_persona` }
         ]
     });
 });
