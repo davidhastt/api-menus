@@ -9,11 +9,11 @@ export const getInfo=async(req:Request, res:Response):Promise<Response>=>{//no e
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
 
         return res.status(200).json({
-            "mensaje":"Bienvenido, esta api contiene varios grupos de endpoints, los cuales se muestran a continuación, dale click a cada endpoint para ver mas detalles",
+            "mensaje":"Bienvenido; a continuacion se muestra en formato JSON el menu de endpoints disponibles",
             "status":200,
             "endpoints":[
                 {"pruebaConexion":`${url}pruebaConexion`},
-                {"personas":`${url}personas`}
+                {"personas":`${url}personasInfo`}
 
             ]
         });

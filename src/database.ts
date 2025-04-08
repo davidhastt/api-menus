@@ -3,9 +3,9 @@ import { Pool } from "pg";
 //config();
 
 
-//si se desarrolla en entorno local activa este bloque de codigo
+//si se desarrolla en entorno local inegi activa este bloque de codigo
 
-
+/*
 export const pool = new Pool({
     user:'postgres',
     host:'localhost',
@@ -14,7 +14,19 @@ export const pool = new Pool({
     port: 5432,
     //ssl:true
 });
+*/
 
+//si se desarrolla en entorno local casa activa este bloque de codigo
+
+
+export const pool = new Pool({
+    user:'postgres',
+    host:'localhost',
+    password: 'davitzoL',
+    database: 'sihca',
+    port: 5432,
+    //ssl:true
+});
 
 
 

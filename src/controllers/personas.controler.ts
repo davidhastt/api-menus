@@ -3,20 +3,20 @@ import { QueryResult } from "pg";
 import { pool } from "../database";
 //no olvides ponerles try, catch
 
-export const info=async(req:Request, res:Response):Promise<Response>=>{
+
+export const personasInfo=async(req:Request, res:Response):Promise<Response>=>{//no es necesario actualizar esta funcion
 
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
 
         return res.status(200).json({
-            "mensaje":"Bienvenido, estos son los endpoints disponibles para manejar personas",
+            "mensaje":"Bienvenido; a la sección de endpoints para personas, que son los siguientes:",
             "status":200,
             "endpoints":[
-                {"personas":`${url}`},
-                {"personas all":`${url}/all`},
-                {"crearpersona":`${url}/crearpersona`},
-                {"persona x id":`${url}/id_persona`},
-                {"persona update":`${url}/id_persona`}
-                
+                {"mostrar todas las personas":`${url}personas`},
+                {"mostrar una persona por ID":`${url}personas/id_persona`},
+                {"Crear una persona":`${url}crearpersona`},
+                {"borrar una persona":`${url}personas/id_persona`},
+                {"actualizar una persona":`${url}personas/id_persona`}
             ]
         });
 
@@ -38,6 +38,7 @@ export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
     }
     
 }
+
 
 export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
     const id_persona = parseInt(req.params.id_persona);

@@ -4,11 +4,22 @@ exports.pool = void 0;
 const pg_1 = require("pg");
 //import {config} from 'dotenv';
 //config();
-//si se desarrolla en entorno local activa este bloque de codigo
+//si se desarrolla en entorno local inegi activa este bloque de codigo
+/*
+export const pool = new Pool({
+    user:'postgres',
+    host:'localhost',
+    password: 'postgresx',
+    database: 'sihca',
+    port: 5432,
+    //ssl:true
+});
+*/
+//si se desarrolla en entorno local casa activa este bloque de codigo
 exports.pool = new pg_1.Pool({
     user: 'postgres',
     host: 'localhost',
-    password: 'postgresx',
+    password: 'davitzoL',
     database: 'sihca',
     port: 5432,
     //ssl:true

@@ -9,24 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = exports.info = void 0;
+exports.createUser = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = exports.personasInfo = void 0;
 const database_1 = require("../database");
 //no olvides ponerles try, catch
-const info = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const personasInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
     return res.status(200).json({
-        "mensaje": "Bienvenido, estos son los endpoints disponibles para manejar personas",
+        "mensaje": "Bienvenido; a la sección de endpoints para personas, que son los siguientes:",
         "status": 200,
         "endpoints": [
-            { "personas": `${url}` },
-            { "personas all": `${url}/all` },
-            { "crearpersona": `${url}/crearpersona` },
-            { "persona x id": `${url}/id_persona` },
-            { "persona update": `${url}/id_persona` }
+            { "mostrar todas las personas": `${url}personas` },
+            { "mostrar una persona por ID": `${url}personas/id_persona` },
+            { "Crear una persona": `${url}crearpersona` },
+            { "borrar una persona": `${url}personas/id_persona` },
+            { "actualizar una persona": `${url}personas/id_persona` }
         ]
     });
 });
-exports.info = info;
+exports.personasInfo = personasInfo;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield database_1.pool.query('SELECT * FROM public.personas');
