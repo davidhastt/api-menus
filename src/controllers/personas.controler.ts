@@ -4,19 +4,51 @@ import { pool } from "../database";
 //no olvides ponerles try, catch
 
 
+
+
+export const createUser=async (req:Request, res:Response): Promise<Response>=>{
+    const {id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono}=req.body;
+    try{
+        const response: QueryResult=await pool.query('INSERT INTO public.personas (id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono) VALUES ($1, $2, $3, $4, $5, $6, $7 )', [id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono]);
+        return res.json({
+            message: 'El usario se creo satisfactoriamente',
+            body:{
+                user:{
+                    id_tienda, 
+                    tipo, 
+                    nombre,
+                    apaterno,
+                    amaterno,
+                    fechaNac,
+                    telefono
+                }
+            }
+        })
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
+
+    }
+    //console.log(req.body);
+    //res.send('recived');
+}
+
+
+
 export const personasInfo=async(req:Request, res:Response):Promise<Response>=>{//no es necesario actualizar esta funcion
 
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
-
+        //esto es lo que sale en la pagina web en formato json
         return res.status(200).json({
             "mensaje":"Bienvenido; a la sección de endpoints para personas, que son los siguientes:",
             "status":200,
             "endpoints":[
-                {"mostrar todas las personas":`${url}personas`},
-                {"mostrar una persona por ID":`${url}personas/id_persona`},
-                {"Crear una persona":`${url}crearpersona`},
-                {"borrar una persona":`${url}personas/id_persona`},
-                {"actualizar una persona":`${url}personas/id_persona`}
+                {"mostrar todas las personas":`${url}/all`},
+                {"mostrar una persona por ID":`${url}/id_persona`},
+                {"Crear una persona":`${url}/crear`},
+                {"borrar una persona":`${url}/id_persona`},
+                {"actualizar una persona":`${url}/id_persona`}
             ]
         });
 
@@ -69,30 +101,3 @@ export const getUserById=async (req:Request, res:Response): Promise<Response>=>{
 }
 
 
-export const createUser=async (req:Request, res:Response): Promise<Response>=>{
-    const {id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono}=req.body;
-    try{
-        const response: QueryResult=await pool.query('INSERT INTO public.personas (id_tienda, tipo, nombre, apaterno, amaterno, "fechaNac", telefono) VALUES ($1, $2, $3, $4, $5, $6, $7 )', [id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono]);
-        return res.json({
-            message: 'El usario se creo satisfactoriamente',
-            body:{
-                user:{
-                    id_tienda, 
-                    tipo, 
-                    nombre,
-                    apaterno,
-                    amaterno,
-                    fechaNac,
-                    telefono
-                }
-            }
-        })
-    }
-    catch(e){
-        console.log(e);
-        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
-
-    }
-    //console.log(req.body);
-    //res.send('recived');
-}
