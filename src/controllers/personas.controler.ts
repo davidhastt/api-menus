@@ -44,11 +44,11 @@ export const personasInfo=async(req:Request, res:Response):Promise<Response>=>{/
             "mensaje":"Bienvenido; a la sección de endpoints para personas, que son los siguientes:",
             "status":200,
             "endpoints":[
-                {"mostrar todas las personas":`${url}/all`},
-                {"mostrar una persona por ID":`${url}/id_persona`},
-                {"Crear una persona":`${url}/crear`},
-                {"borrar una persona":`${url}/id_persona`},
-                {"actualizar una persona":`${url}/id_persona`}
+                {"mostrar todas las personas":`${url}all`},
+                {"mostrar una persona por ID":`${url}id_persona`},
+                {"Crear una persona":`${url}crear`},
+                {"borrar una persona":`${url}id_persona`},
+                {"actualizar una persona":`${url}id_persona`}
             ]
         });
 

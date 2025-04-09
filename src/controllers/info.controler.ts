@@ -13,7 +13,7 @@ export const getInfo=async(req:Request, res:Response):Promise<Response>=>{//no e
             "status":200,
             "endpoints":[
                 {"pruebaConexion":`${url}pruebaConexion`},
-                {"personas":`${url}personas/info`}
+                {"personas":`${url}personas/`}
 
             ]
         });

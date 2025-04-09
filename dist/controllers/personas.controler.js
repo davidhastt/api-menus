@@ -9,20 +9,48 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUser = exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = exports.personasInfo = void 0;
+exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = exports.personasInfo = exports.createUser = void 0;
 const database_1 = require("../database");
 //no olvides ponerles try, catch
+const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono } = req.body;
+    try {
+        const response = yield database_1.pool.query('INSERT INTO public.personas (id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono) VALUES ($1, $2, $3, $4, $5, $6, $7 )', [id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono]);
+        return res.json({
+            message: 'El usario se creo satisfactoriamente',
+            body: {
+                user: {
+                    id_tienda,
+                    tipo,
+                    nombre,
+                    apaterno,
+                    amaterno,
+                    fechaNac,
+                    telefono
+                }
+            }
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
+    }
+    //console.log(req.body);
+    //res.send('recived');
+});
+exports.createUser = createUser;
 const personasInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
+    //esto es lo que sale en la pagina web en formato json
     return res.status(200).json({
         "mensaje": "Bienvenido; a la sección de endpoints para personas, que son los siguientes:",
         "status": 200,
         "endpoints": [
-            { "mostrar todas las personas": `${url}personas` },
-            { "mostrar una persona por ID": `${url}personas/id_persona` },
-            { "Crear una persona": `${url}crearpersona` },
-            { "borrar una persona": `${url}personas/id_persona` },
-            { "actualizar una persona": `${url}personas/id_persona` }
+            { "mostrar todas las personas": `${url}all` },
+            { "mostrar una persona por ID": `${url}id_persona` },
+            { "Crear una persona": `${url}crear` },
+            { "borrar una persona": `${url}id_persona` },
+            { "actualizar una persona": `${url}id_persona` }
         ]
     });
 });
@@ -62,30 +90,3 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     return res.json(response.rows);
 });
 exports.getUserById = getUserById;
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono } = req.body;
-    try {
-        const response = yield database_1.pool.query('INSERT INTO public.personas (id_tienda, tipo, nombre, apaterno, amaterno, "fechaNac", telefono) VALUES ($1, $2, $3, $4, $5, $6, $7 )', [id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono]);
-        return res.json({
-            message: 'El usario se creo satisfactoriamente',
-            body: {
-                user: {
-                    id_tienda,
-                    tipo,
-                    nombre,
-                    apaterno,
-                    amaterno,
-                    fechaNac,
-                    telefono
-                }
-            }
-        });
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
-    }
-    //console.log(req.body);
-    //res.send('recived');
-});
-exports.createUser = createUser;

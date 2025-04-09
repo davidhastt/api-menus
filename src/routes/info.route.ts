@@ -7,7 +7,7 @@ import {personasInfo} from "../controllers/personas.controler";
 //inicio
 router.get('/', getInfo);
 router.get('/pruebaConexion', pruebaConexionDB);
-router.get('/personas/info', personasInfo)
+router.get('/personas/', personasInfo)
 
 
 

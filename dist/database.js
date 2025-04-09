@@ -5,25 +5,26 @@ const pg_1 = require("pg");
 //import {config} from 'dotenv';
 //config();
 //si se desarrolla en entorno local inegi activa este bloque de codigo
+exports.pool = new pg_1.Pool({
+    user: 'postgres',
+    host: 'localhost',
+    password: 'postgres',
+    database: 'SIHCA',
+    port: 5432,
+    //ssl:true
+});
+//si se desarrolla en entorno local casa activa este bloque de codigo
 /*
 export const pool = new Pool({
     user:'postgres',
     host:'localhost',
-    password: 'postgresx',
-    database: 'sihca',
-    port: 5432,
-    //ssl:true
-});
-*/
-//si se desarrolla en entorno local casa activa este bloque de codigo
-exports.pool = new pg_1.Pool({
-    user: 'postgres',
-    host: 'localhost',
     password: 'davitzoL',
     database: 'sihca',
     port: 5432,
     //ssl:true
 });
+
+*/
 //external url de render
 /*
 export const pool = new Pool({
