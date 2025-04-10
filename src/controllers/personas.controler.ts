@@ -3,7 +3,18 @@ import { QueryResult } from "pg";
 import { pool } from "../database";
 //no olvides ponerles try, catch
 
-
+export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
+    try{
+        const response: QueryResult= await pool.query('SELECT * FROM public.personas');
+        console.log(response.rows);
+        return res.status(200).json(response.rows);
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
+    }
+    
+}
 
 
 export const createUser=async (req:Request, res:Response): Promise<Response>=>{
@@ -33,8 +44,6 @@ export const createUser=async (req:Request, res:Response): Promise<Response>=>{
 
     }
 
-    
-
     //console.log(req.body);
     //res.send('recived');
 
@@ -58,21 +67,6 @@ export const personasInfo=async(req:Request, res:Response):Promise<Response>=>{/
                 {"actualizar una persona":`${url}id_persona`}
             ]
         });
-}
-
-
-
-export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
-    try{
-        const response: QueryResult= await pool.query('SELECT * FROM public.personas');
-        console.log(response.rows);
-        return res.status(200).json(response.rows);
-    }
-    catch(e){
-        console.log(e);
-        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
-    }
-    
 }
 
 

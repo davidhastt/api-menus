@@ -9,9 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = exports.updateUser = exports.deleteUser = exports.getUsers = exports.personasInfo = exports.createUser = void 0;
+exports.getUserById = exports.updateUser = exports.deleteUser = exports.personasInfo = exports.createUser = exports.getUsers = void 0;
 const database_1 = require("../database");
 //no olvides ponerles try, catch
+const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield database_1.pool.query('SELECT * FROM public.personas');
+        console.log(response.rows);
+        return res.status(200).json(response.rows);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
+    }
+});
+exports.getUsers = getUsers;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo } = req.body;
     try {
@@ -55,18 +67,6 @@ const personasInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     });
 });
 exports.personasInfo = personasInfo;
-const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield database_1.pool.query('SELECT * FROM public.personas');
-        console.log(response.rows);
-        return res.status(200).json(response.rows);
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
-    }
-});
-exports.getUsers = getUsers;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id_persona = parseInt(req.params.id_persona);
     yield database_1.pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
