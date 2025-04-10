@@ -10,4 +10,5 @@ router.get('/personas/all', personas_controler_1.getUsers);
 router.get('/personas/:id_persona', personas_controler_1.getUserById);
 router.delete('/personas/:id_persona', personas_controler_1.deleteUser);
 router.put('/personas/:id_persona', personas_controler_1.updateUser);
+router.post('/personas/login', personas_controler_1.login);
 exports.default = router;

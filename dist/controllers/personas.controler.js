@@ -12,10 +12,63 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.personasInfo = exports.getUsers = exports.getUserById = exports.updateUser = exports.deleteUser = exports.createUser = void 0;
+exports.personasInfo = exports.getUsers = exports.getUserById = exports.updateUser = exports.deleteUser = exports.createUser = exports.login = void 0;
 const database_1 = require("../database");
 const argon2_1 = __importDefault(require("argon2"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 //no olvides ponerles try, catch
+const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { correo, password } = req.body;
+    try {
+        const userResult = yield database_1.pool.query('SELECT * FROM personas WHERE correo = $1', [correo]);
+        // Resto del código...
+        //sino existe el usuario
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({
+                "message": "Usuario no encontrado",
+                "status": 404
+            });
+        }
+        const user = userResult.rows[0];
+        const isPasswordCorrect = yield argon2_1.default.verify(user.password, password);
+        // si el password es incorrecto
+        if (!isPasswordCorrect) {
+            return res.status(401).json({
+                "message": "Password incorrecto",
+                "status": 401
+            });
+        }
+        const payload = {
+            "correo": user.correo,
+            "nombre": user.nombre,
+        };
+        // Secret key
+        const jwt_secret = process.env.JWT_SECRET;
+        if (!jwt_secret) {
+            return res.status(500).json({
+                "message": "Error interno del servidor, clave secreta no definida.",
+                "status": 500,
+            });
+        }
+        // Sign the token
+        const token = jsonwebtoken_1.default.sign(payload, jwt_secret, {
+            expiresIn: '1h'
+        });
+        return res.status(200).json({
+            "message": "Usuario aceptado en el sistema por una hora",
+            "status": 200,
+            "JWT": token
+        });
+    }
+    catch (e) {
+        return res.status(500).json({
+            "message": "Error interno del servidor",
+            "status": 500,
+            "error": { "error": [`NodeJS dice ${e}`] }
+        });
+    }
+});
+exports.login = login;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password } = req.body;
     const hashedPassword = yield argon2_1.default.hash(password);

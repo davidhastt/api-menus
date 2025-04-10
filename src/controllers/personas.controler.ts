@@ -2,12 +2,99 @@ import { Request, Response } from "express";
 import { QueryResult } from "pg";
 import { pool } from "../database";
 import argon2 from 'argon2';
+import jwt, { Secret } from 'jsonwebtoken';
 //no olvides ponerles try, catch
+
+export const login= async (req:Request, res:Response): Promise<Response>=>{
+    
+    const { correo, password } = req.body; 
+
+    try {
+        const userResult = await pool.query('SELECT * FROM personas WHERE correo = $1', [correo]);
+        // Resto del código...
+        //sino existe el usuario
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({
+                "message":"Usuario no encontrado",
+                "status":404
+            });
+        }
+
+        const user = userResult.rows[0];
+        const isPasswordCorrect = await argon2.verify(user.password, password);
+        // si el password es incorrecto
+        if (!isPasswordCorrect) {
+            return res.status(401).json({
+                "message":"Password incorrecto",
+                "status":401
+            });
+        }
+        
+        const payload = {
+            "correo": user.correo,
+            "nombre": user.nombre,
+          };
+          // Secret key
+        const jwt_secret:  undefined | null | jwt.Secret  | jwt.PrivateKey = process.env.JWT_SECRET;        
+    
+        if (!jwt_secret) {
+            return res.status(500).json({
+              "message": "Error interno del servidor, clave secreta no definida.",
+              "status": 500,
+            });
+          }
+        
+        // Sign the token
+        const token = jwt.sign(payload, jwt_secret, {
+        expiresIn: '1h'},);
+    
+        return res.status(200).json({
+            "message":"Usuario aceptado en el sistema por una hora",
+            "status":200,
+            "JWT": token
+        });        
+
+
+      } catch (e) {
+        return res.status(500).json({
+          "message": "Error interno del servidor",
+          "status": 500,
+          "error": {"error":[`NodeJS dice ${e}`]}
+        });
+      }
+
+
+      
+
+
+
+    
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const createUser=async (req:Request, res:Response): Promise<Response>=>{
 
     const  {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password}=req.body;
-    
     const hashedPassword = await argon2.hash(password);
 
     try{
@@ -30,13 +117,9 @@ export const createUser=async (req:Request, res:Response): Promise<Response>=>{
     catch(e){
         console.log(e);
         return res.status(500).json({"error":[`NodeJS dice ${e}`]});
-
     }
-
     //console.log(req.body);
     //res.send('recived');
-
-    
 }
 
 
@@ -81,9 +164,6 @@ export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
     }
     
 }
-
-
-
 
 
 
