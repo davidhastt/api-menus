@@ -11,7 +11,7 @@ exports.pool = new pg_1.Pool({
     password: 'postgres',
     database: 'SIHCA',
     port: 5432,
-    //ssl:true
+    //ssl:true 
 });
 //si se desarrolla en entorno local casa activa este bloque de codigo
 /*

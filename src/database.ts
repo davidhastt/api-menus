@@ -12,7 +12,7 @@ export const pool = new Pool({
     password: 'postgres',
     database: 'SIHCA',
     port: 5432,
-    //ssl:true
+    //ssl:true 
 });
 
 

@@ -7,5 +7,5 @@ const personas_controler_1 = require("../controllers/personas.controler");
 //inicio
 router.get('/', info_controler_1.getInfo);
 router.get('/pruebaConexion', info_controler_1.pruebaConexionDB);
-router.get('/personas/', personas_controler_1.personasInfo);
+router.get('/personas', personas_controler_1.personasInfo);
 exports.default = router;

@@ -7,20 +7,22 @@ import { pool } from "../database";
 
 
 export const createUser=async (req:Request, res:Response): Promise<Response>=>{
-    const {id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono}=req.body;
+
+    const  {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo}=req.body;
+    
     try{
-        const response: QueryResult=await pool.query('INSERT INTO public.personas (id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono) VALUES ($1, $2, $3, $4, $5, $6, $7 )', [id_tienda, tipo, nombre, apaterno, amaterno, fechaNac, telefono]);
+        const response: QueryResult=await pool.query('INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo) VALUES ($1, $2, $3, $4, $5, $6, $7)', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo]);
         return res.json({
             message: 'El usario se creo satisfactoriamente',
             body:{
                 user:{
-                    id_tienda, 
-                    tipo, 
+                    tipo,                                         
                     nombre,
                     apaterno,
-                    amaterno,
+                    amaterno,                    
                     fechaNac,
-                    telefono
+                    telefono,
+                    correo
                 }
             }
         })
@@ -30,8 +32,13 @@ export const createUser=async (req:Request, res:Response): Promise<Response>=>{
         return res.status(500).json({"error":[`NodeJS dice ${e}`]});
 
     }
+
+    
+
     //console.log(req.body);
     //res.send('recived');
+
+    
 }
 
 
@@ -51,9 +58,6 @@ export const personasInfo=async(req:Request, res:Response):Promise<Response>=>{/
                 {"actualizar una persona":`${url}id_persona`}
             ]
         });
-
-        
-  
 }
 
 
