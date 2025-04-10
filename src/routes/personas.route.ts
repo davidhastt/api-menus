@@ -6,8 +6,6 @@ import {personasInfo, getUsers, getUserById, createUser, deleteUser, updateUser}
 router.get('/personas', personasInfo);
 router.post('/personas/crear', createUser);
 
-
-
 router.get('/personas/all', getUsers);
 router.get('/personas/:id_persona', getUserById);
 router.delete('/personas/:id_persona', deleteUser);
