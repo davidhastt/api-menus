@@ -3,14 +3,16 @@ import { QueryResult } from "pg";
 import { pool } from "../database";
 //no olvides ponerles try, catch
 
+export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
+    const id_persona = parseInt(req.params.id_persona);
+    await pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
+    return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado`});
+
+    //console.log(req.params.id);
+    //res.send('deleting');
+}
+
 export const updateUser=async (req:Request, res:Response): Promise<Response>=>{
-/*
-    return res.status(200).json({
-        "messege":"Encontro el endpoint",
-        "status":200,
-        "respuesta": req.body
-    });
-*/
 
     const id_persona = parseInt(req.params.id_persona);
     const {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo} = req.body;
@@ -94,16 +96,6 @@ export const personasInfo=async(req:Request, res:Response):Promise<Response>=>{/
                 {"actualizar una persona":`${url}id_persona`}
             ]
         });
-}
-
-
-export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
-    const id_persona = parseInt(req.params.id_persona);
-    await pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
-    return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado`});
-
-    //console.log(req.params.id);
-    //res.send('deleting');
 }
 
 

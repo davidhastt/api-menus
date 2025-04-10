@@ -9,17 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.personasInfo = exports.createUser = exports.getUsers = exports.getUserById = exports.updateUser = void 0;
+exports.personasInfo = exports.createUser = exports.getUsers = exports.getUserById = exports.updateUser = exports.deleteUser = void 0;
 const database_1 = require("../database");
 //no olvides ponerles try, catch
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id_persona = parseInt(req.params.id_persona);
+    yield database_1.pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
+    return res.json({ "Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado` });
+    //console.log(req.params.id);
+    //res.send('deleting');
+});
+exports.deleteUser = deleteUser;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    /*
-        return res.status(200).json({
-            "messege":"Encontro el endpoint",
-            "status":200,
-            "respuesta": req.body
-        });
-    */
     const id_persona = parseInt(req.params.id_persona);
     const { tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo } = req.body;
     yield database_1.pool.query('UPDATE public.personas SET tipo = $1, nombre = $2, apaterno = $3, amaterno = $4, fechaNac = $5, telefono = $6, correo= $7 WHERE id_persona = $8', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, id_persona]);
@@ -89,11 +90,3 @@ const personasInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     });
 });
 exports.personasInfo = personasInfo;
-const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id_persona = parseInt(req.params.id_persona);
-    yield database_1.pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
-    return res.json({ "Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado` });
-    //console.log(req.params.id);
-    //res.send('deleting');
-});
-exports.deleteUser = deleteUser;
