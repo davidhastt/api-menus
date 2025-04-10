@@ -1,7 +1,44 @@
 import { Request, Response } from "express";
 import { QueryResult } from "pg";
 import { pool } from "../database";
+import argon2 from 'argon2';
 //no olvides ponerles try, catch
+
+export const createUser=async (req:Request, res:Response): Promise<Response>=>{
+
+    const  {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password}=req.body;
+    
+    const hashedPassword = await argon2.hash(password);
+
+    try{
+        const response: QueryResult=await pool.query('INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, hashedPassword]);
+        return res.json({
+            message: 'El usario se creo satisfactoriamente',
+            body:{
+                user:{
+                    tipo,                                         
+                    nombre,
+                    apaterno,
+                    amaterno,                    
+                    fechaNac,
+                    telefono,
+                    correo                    
+                }
+            }
+        })
+    }
+    catch(e){
+        console.log(e);
+        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
+
+    }
+
+    //console.log(req.body);
+    //res.send('recived');
+
+    
+}
+
 
 export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
     const id_persona = parseInt(req.params.id_persona);
@@ -46,38 +83,7 @@ export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
 }
 
 
-export const createUser=async (req:Request, res:Response): Promise<Response>=>{
 
-    const  {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo}=req.body;
-    
-    try{
-        const response: QueryResult=await pool.query('INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo) VALUES ($1, $2, $3, $4, $5, $6, $7)', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo]);
-        return res.json({
-            message: 'El usario se creo satisfactoriamente',
-            body:{
-                user:{
-                    tipo,                                         
-                    nombre,
-                    apaterno,
-                    amaterno,                    
-                    fechaNac,
-                    telefono,
-                    correo
-                }
-            }
-        })
-    }
-    catch(e){
-        console.log(e);
-        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
-
-    }
-
-    //console.log(req.body);
-    //res.send('recived');
-
-    
-}
 
 
 

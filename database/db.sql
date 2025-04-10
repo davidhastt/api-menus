@@ -9,6 +9,7 @@ CREATE TABLE public.personas
     fechaNac date NOT NULL,
     telefono character varying(10) NOT NULL,
     correo character varying(50) NOT NULL,
+    password character varying(30) NOT NULL,
     PRIMARY KEY (id_persona)
 )
 

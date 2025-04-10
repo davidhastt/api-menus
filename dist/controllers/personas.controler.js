@@ -8,10 +8,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.personasInfo = exports.createUser = exports.getUsers = exports.getUserById = exports.updateUser = exports.deleteUser = void 0;
+exports.personasInfo = exports.getUsers = exports.getUserById = exports.updateUser = exports.deleteUser = exports.createUser = void 0;
 const database_1 = require("../database");
+const argon2_1 = __importDefault(require("argon2"));
 //no olvides ponerles try, catch
+const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password } = req.body;
+    const hashedPassword = yield argon2_1.default.hash(password);
+    try {
+        const response = yield database_1.pool.query('INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, hashedPassword]);
+        return res.json({
+            message: 'El usario se creo satisfactoriamente',
+            body: {
+                user: {
+                    tipo,
+                    nombre,
+                    apaterno,
+                    amaterno,
+                    fechaNac,
+                    telefono,
+                    correo
+                }
+            }
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
+    }
+    //console.log(req.body);
+    //res.send('recived');
+});
+exports.createUser = createUser;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id_persona = parseInt(req.params.id_persona);
     yield database_1.pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
@@ -47,33 +79,6 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getUsers = getUsers;
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo } = req.body;
-    try {
-        const response = yield database_1.pool.query('INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo) VALUES ($1, $2, $3, $4, $5, $6, $7)', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo]);
-        return res.json({
-            message: 'El usario se creo satisfactoriamente',
-            body: {
-                user: {
-                    tipo,
-                    nombre,
-                    apaterno,
-                    amaterno,
-                    fechaNac,
-                    telefono,
-                    correo
-                }
-            }
-        });
-    }
-    catch (e) {
-        console.log(e);
-        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
-    }
-    //console.log(req.body);
-    //res.send('recived');
-});
-exports.createUser = createUser;
 const personasInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
     //esto es lo que sale en la pagina web en formato json
