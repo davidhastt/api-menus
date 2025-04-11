@@ -130,7 +130,14 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     //res.send('recived');
     const id_persona = parseInt(req.params.id_persona);
     const response = yield database_1.pool.query('SELECT * FROM public.personas WHERE id_persona = $1', [id_persona]);
-    return res.json(response.rows);
+    //console.log(response.rows[0]);
+    const person = response.rows[0];
+    //return res.json(response.rows);
+    return res.status(200).json({
+        "message": "Persona encontrada",
+        "status": 200,
+        "respuesta": person
+    });
 });
 exports.getUserById = getUserById;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

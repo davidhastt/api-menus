@@ -149,7 +149,14 @@ export const getUserById=async (req:Request, res:Response): Promise<Response>=>{
     //res.send('recived');
     const id_persona = parseInt(req.params.id_persona);
     const response: QueryResult= await pool.query('SELECT * FROM public.personas WHERE id_persona = $1', [id_persona]);
-    return res.json(response.rows);
+    //console.log(response.rows[0]);
+    const person:Persona=response.rows[0];
+    //return res.json(response.rows);
+    return res.status(200).json({
+        "message":"Persona encontrada",
+        "status":200,
+        "respuesta": person
+    });
 }
 
 
