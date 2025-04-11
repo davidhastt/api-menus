@@ -3,6 +3,8 @@ import { QueryResult } from "pg";
 import { pool } from "../database";
 import argon2 from 'argon2';
 import jwt, { Secret } from 'jsonwebtoken';
+import { Persona } from "../interfaces/persona.interface";
+//import Persona from "../interfaces/persona.interface"
 //no olvides ponerles try, catch
 
 export const login= async (req:Request, res:Response): Promise<Response>=>{
@@ -56,71 +58,75 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
 
 
       } catch (e) {
+        console.log(e);
         return res.status(500).json({
           "message": "Error interno del servidor",
           "status": 500,
-          "error": {"error":[`NodeJS dice ${e}`]}
+          "error":"Error en el servidor"
         });
+
+
+        
+        
+
+
+
       }
-
-
-      
-
-
-
-    
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 export const createUser=async (req:Request, res:Response): Promise<Response>=>{
 
-    const  {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password}=req.body;
-    const hashedPassword = await argon2.hash(password);
+    //const  {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password}=req.body;
+
+    const newPerson:Persona= req.body;
+    newPerson.password = await argon2.hash(newPerson.password);
 
     try{
-        const response: QueryResult=await pool.query('INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, hashedPassword]);
+
+        const response: QueryResult = await pool.query(
+            'INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+            [newPerson.tipo, newPerson.nombre, newPerson.apaterno, newPerson.amaterno, newPerson.fechaNac, newPerson.telefono, newPerson.correo, newPerson.password]
+        );
+
         return res.json({
             message: 'El usario se creo satisfactoriamente',
             body:{
                 user:{
-                    tipo,                                         
-                    nombre,
-                    apaterno,
-                    amaterno,                    
-                    fechaNac,
-                    telefono,
-                    correo                    
+                    newPerson                    
                 }
             }
         })
     }
     catch(e){
-        console.log(e);
-        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
-    }
-    //console.log(req.body);
-    //res.send('recived');
+        console.log(e);    
+        return res.status(500).json({"error": ["Ocurrió un error en el servidor."]});
+    }    
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
@@ -138,7 +144,6 @@ export const updateUser=async (req:Request, res:Response): Promise<Response>=>{
     const {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo} = req.body;
     await pool.query('UPDATE public.personas SET tipo = $1, nombre = $2, apaterno = $3, amaterno = $4, fechaNac = $5, telefono = $6, correo= $7 WHERE id_persona = $8', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, id_persona]);
     return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue actualizada`});
-
 
 }
 
@@ -159,12 +164,11 @@ export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
         return res.status(200).json(response.rows);
     }
     catch(e){
-        console.log(e);
-        return res.status(500).json({"error":[`NodeJS dice ${e}`]});
+        console.log(e);    
+        return res.status(500).json({"error": ["Ocurrió un error en el servidor."]});
     }
     
 }
-
 
 
 export const personasInfo=async(req:Request, res:Response):Promise<Response>=>{//no es necesario actualizar esta funcion

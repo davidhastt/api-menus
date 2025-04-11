@@ -16,6 +16,7 @@ exports.personasInfo = exports.getUsers = exports.getUserById = exports.updateUs
 const database_1 = require("../database");
 const argon2_1 = __importDefault(require("argon2"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+//import Persona from "../interfaces/persona.interface"
 //no olvides ponerles try, catch
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { correo, password } = req.body;
@@ -61,40 +62,34 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (e) {
+        console.log(e);
         return res.status(500).json({
             "message": "Error interno del servidor",
             "status": 500,
-            "error": { "error": [`NodeJS dice ${e}`] }
+            "error": "Error en el servidor"
         });
     }
 });
 exports.login = login;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password } = req.body;
-    const hashedPassword = yield argon2_1.default.hash(password);
+    //const  {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password}=req.body;
+    const newPerson = req.body;
+    newPerson.password = yield argon2_1.default.hash(newPerson.password);
     try {
-        const response = yield database_1.pool.query('INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, hashedPassword]);
+        const response = yield database_1.pool.query('INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [newPerson.tipo, newPerson.nombre, newPerson.apaterno, newPerson.amaterno, newPerson.fechaNac, newPerson.telefono, newPerson.correo, newPerson.password]);
         return res.json({
             message: 'El usario se creo satisfactoriamente',
             body: {
                 user: {
-                    tipo,
-                    nombre,
-                    apaterno,
-                    amaterno,
-                    fechaNac,
-                    telefono,
-                    correo
+                    newPerson
                 }
             }
         });
     }
     catch (e) {
         console.log(e);
-        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
+        return res.status(500).json({ "error": ["Ocurrió un error en el servidor."] });
     }
-    //console.log(req.body);
-    //res.send('recived');
 });
 exports.createUser = createUser;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -128,7 +123,7 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (e) {
         console.log(e);
-        return res.status(500).json({ "error": [`NodeJS dice ${e}`] });
+        return res.status(500).json({ "error": ["Ocurrió un error en el servidor."] });
     }
 });
 exports.getUsers = getUsers;
