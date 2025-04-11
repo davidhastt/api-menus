@@ -77,8 +77,6 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
 
 export const createUser=async (req:Request, res:Response): Promise<Response>=>{
 
-    //const  {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password}=req.body;
-
     const newPerson:Persona= req.body;
     newPerson.password = await argon2.hash(newPerson.password);
 
@@ -107,44 +105,42 @@ export const createUser=async (req:Request, res:Response): Promise<Response>=>{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
     const id_persona = parseInt(req.params.id_persona);
     await pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
-    return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado`});
+    //return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado`});
+    console.log(`La persona con id_persona = ${id_persona} fue eliminada`)
+    return res.status(200).json({
+        "message":"La persona con fue eliminada",
+        "status":200
+    }); 
 
     //console.log(req.params.id);
     //res.send('deleting');
 }
 
 export const updateUser=async (req:Request, res:Response): Promise<Response>=>{
+//falta validar que la persona con el id recibido exista
 
-    const id_persona = parseInt(req.params.id_persona);
-    const {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo} = req.body;
-    await pool.query('UPDATE public.personas SET tipo = $1, nombre = $2, apaterno = $3, amaterno = $4, fechaNac = $5, telefono = $6, correo= $7 WHERE id_persona = $8', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, id_persona]);
-    return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue actualizada`});
+    const person:Persona= req.body;
+    person.id_persona=parseInt(req.params.id_persona);
 
+    
+        try{
+            await pool.query('UPDATE public.personas SET tipo = $1, nombre = $2, apaterno = $3, amaterno = $4, fechaNac = $5, telefono = $6, correo= $7 WHERE id_persona = $8', [person.tipo, person.nombre, person.apaterno, person.amaterno, person.fechaNac, person.telefono, person.correo, person.id_persona]);
+            console.log(`La persona con id_perona =  ${person.id_persona} fue actualizada`);
+            return res.status(200).json({
+                "message":"La persona con fue actualizada",
+                "status":200
+            });            
+        }
+        catch(e){
+            console.log(e);    
+            return res.status(500).json({
+                "message":"Error en el servidor",
+                "status":500
+            });
+        }
 }
 
 

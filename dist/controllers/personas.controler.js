@@ -72,7 +72,6 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.login = login;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //const  {tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password}=req.body;
     const newPerson = req.body;
     newPerson.password = yield argon2_1.default.hash(newPerson.password);
     try {
@@ -95,16 +94,35 @@ exports.createUser = createUser;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id_persona = parseInt(req.params.id_persona);
     yield database_1.pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
-    return res.json({ "Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado` });
+    //return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado`});
+    console.log(`La persona con id_persona = ${id_persona} fue eliminada`);
+    return res.status(200).json({
+        "message": "La persona con fue eliminada",
+        "status": 200
+    });
     //console.log(req.params.id);
     //res.send('deleting');
 });
 exports.deleteUser = deleteUser;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id_persona = parseInt(req.params.id_persona);
-    const { tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo } = req.body;
-    yield database_1.pool.query('UPDATE public.personas SET tipo = $1, nombre = $2, apaterno = $3, amaterno = $4, fechaNac = $5, telefono = $6, correo= $7 WHERE id_persona = $8', [tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, id_persona]);
-    return res.json({ "Mensaje": `La persona con id_perona =  ${id_persona} fue actualizada` });
+    //falta validar que la persona con el id recibido exista
+    const person = req.body;
+    person.id_persona = parseInt(req.params.id_persona);
+    try {
+        yield database_1.pool.query('UPDATE public.personas SET tipo = $1, nombre = $2, apaterno = $3, amaterno = $4, fechaNac = $5, telefono = $6, correo= $7 WHERE id_persona = $8', [person.tipo, person.nombre, person.apaterno, person.amaterno, person.fechaNac, person.telefono, person.correo, person.id_persona]);
+        console.log(`La persona con id_perona =  ${person.id_persona} fue actualizada`);
+        return res.status(200).json({
+            "message": "La persona con fue actualizada",
+            "status": 200
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            "message": "Error en el servidor",
+            "status": 500
+        });
+    }
 });
 exports.updateUser = updateUser;
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
