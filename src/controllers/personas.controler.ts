@@ -12,7 +12,7 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
     const { correo, password } = req.body; 
 
     try {
-        const userResult = await pool.query('SELECT * FROM personas WHERE correo = $1', [correo]);
+        const userResult = await pool.query('SELECT nombre, correo FROM personas WHERE correo = $1', [correo]);
         // Resto del código...
         //sino existe el usuario
         if (userResult.rows.length === 0) {
@@ -75,9 +75,9 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
 }
 
 
-export const createUser=async (req:Request, res:Response): Promise<Response>=>{
+export const createUser=async (req:Request, res:Response): Promise<Response>=>{//falta quitar el password de la respuesta
 
-    const newPerson:Persona= req.body;
+    let newPerson:Persona= req.body;
     newPerson.password = await argon2.hash(newPerson.password);
 
     try{
@@ -86,7 +86,7 @@ export const createUser=async (req:Request, res:Response): Promise<Response>=>{
             'INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
             [newPerson.tipo, newPerson.nombre, newPerson.apaterno, newPerson.amaterno, newPerson.fechaNac, newPerson.telefono, newPerson.correo, newPerson.password]
         );
-
+        newPerson.password="Nada"
         return res.json({
             message: 'El usario se creo satisfactoriamente',
             body:{
@@ -122,6 +122,7 @@ export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
 export const updateUser=async (req:Request, res:Response): Promise<Response>=>{
 //falta validar que la persona con el id recibido exista
 
+
     const person:Persona= req.body;
     person.id_persona=parseInt(req.params.id_persona);
 
@@ -149,7 +150,7 @@ export const getUserById=async (req:Request, res:Response): Promise<Response>=>{
     //res.send('recived');
     try{
         const id_persona = parseInt(req.params.id_persona);
-        const response: QueryResult= await pool.query('SELECT * FROM public.personas WHERE id_persona = $1', [id_persona]);
+        const response: QueryResult= await pool.query('SELECT id_persona, tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo  FROM public.personas WHERE id_persona = $1', [id_persona]);
         //console.log(response.rows[0]);
 
         if (response.rowCount > 0){
@@ -179,9 +180,15 @@ export const getUserById=async (req:Request, res:Response): Promise<Response>=>{
 
 export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
     try{
-        const response: QueryResult= await pool.query('SELECT * FROM public.personas');
-        console.log(response.rows);
-        return res.status(200).json(response.rows);
+        const response: QueryResult= await pool.query('SELECT id_persona, tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo FROM public.personas WHERE tipo > 0');        
+        const personas:Persona[]=response.rows;
+        console.log(personas);
+        return res.status(200).json({
+            "message":"Persona encontrada",
+            "status":200,
+            "Respuesta": personas
+        });             
+
     }
     catch(e){
         console.log(e);    
@@ -192,6 +199,7 @@ export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
     }
     
 }
+
 
 
 export const personasInfo=async(req:Request, res:Response):Promise<Response>=>{//no es necesario actualizar esta funcion

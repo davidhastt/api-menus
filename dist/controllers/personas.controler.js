@@ -21,7 +21,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { correo, password } = req.body;
     try {
-        const userResult = yield database_1.pool.query('SELECT * FROM personas WHERE correo = $1', [correo]);
+        const userResult = yield database_1.pool.query('SELECT nombre, correo FROM personas WHERE correo = $1', [correo]);
         // Resto del código...
         //sino existe el usuario
         if (userResult.rows.length === 0) {
@@ -72,10 +72,11 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.login = login;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const newPerson = req.body;
+    let newPerson = req.body;
     newPerson.password = yield argon2_1.default.hash(newPerson.password);
     try {
         const response = yield database_1.pool.query('INSERT INTO public.personas (tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [newPerson.tipo, newPerson.nombre, newPerson.apaterno, newPerson.amaterno, newPerson.fechaNac, newPerson.telefono, newPerson.correo, newPerson.password]);
+        newPerson.password = "Nada";
         return res.json({
             message: 'El usario se creo satisfactoriamente',
             body: {
@@ -130,7 +131,7 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     //res.send('recived');
     try {
         const id_persona = parseInt(req.params.id_persona);
-        const response = yield database_1.pool.query('SELECT * FROM public.personas WHERE id_persona = $1', [id_persona]);
+        const response = yield database_1.pool.query('SELECT id_persona, tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo  FROM public.personas WHERE id_persona = $1', [id_persona]);
         //console.log(response.rows[0]);
         if (response.rowCount > 0) {
             const person = response.rows[0];
@@ -158,9 +159,14 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getUserById = getUserById;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield database_1.pool.query('SELECT * FROM public.personas');
-        console.log(response.rows);
-        return res.status(200).json(response.rows);
+        const response = yield database_1.pool.query('SELECT id_persona, tipo, nombre, apaterno, amaterno, fechaNac, telefono, correo FROM public.personas WHERE tipo > 0');
+        const personas = response.rows;
+        console.log(personas);
+        return res.status(200).json({
+            "message": "Persona encontrada",
+            "status": 200,
+            "Respuesta": personas
+        });
     }
     catch (e) {
         console.log(e);
