@@ -147,16 +147,33 @@ export const updateUser=async (req:Request, res:Response): Promise<Response>=>{
 export const getUserById=async (req:Request, res:Response): Promise<Response>=>{
     //console.log(req.params.id);
     //res.send('recived');
-    const id_persona = parseInt(req.params.id_persona);
-    const response: QueryResult= await pool.query('SELECT * FROM public.personas WHERE id_persona = $1', [id_persona]);
-    //console.log(response.rows[0]);
-    const person:Persona=response.rows[0];
-    //return res.json(response.rows);
-    return res.status(200).json({
-        "message":"Persona encontrada",
-        "status":200,
-        "respuesta": person
-    });
+    try{
+        const id_persona = parseInt(req.params.id_persona);
+        const response: QueryResult= await pool.query('SELECT * FROM public.personas WHERE id_persona = $1', [id_persona]);
+        //console.log(response.rows[0]);
+
+        if (response.rowCount > 0){
+            const person:Persona=response.rows[0];
+            return res.status(200).json({
+                "message":"Persona encontrada",
+                "status":200,
+                "Respuesta": [person]
+            });             
+        }
+        else{
+            return res.status(200).json({
+                "message":"Persona encontrada",
+                "status":200,
+                "Respuesta": []
+            }); 
+        }
+    }
+    catch{
+        return res.status(500).json({
+            "message":"Error en el servidor",
+            "status":500
+        });
+    }
 }
 
 
@@ -168,7 +185,10 @@ export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
     }
     catch(e){
         console.log(e);    
-        return res.status(500).json({"error": ["Ocurrió un error en el servidor."]});
+        return res.status(500).json({
+            "message":"Error en el servidor",
+            "status":500
+        });
     }
     
 }

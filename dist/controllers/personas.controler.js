@@ -128,16 +128,32 @@ exports.updateUser = updateUser;
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //console.log(req.params.id);
     //res.send('recived');
-    const id_persona = parseInt(req.params.id_persona);
-    const response = yield database_1.pool.query('SELECT * FROM public.personas WHERE id_persona = $1', [id_persona]);
-    //console.log(response.rows[0]);
-    const person = response.rows[0];
-    //return res.json(response.rows);
-    return res.status(200).json({
-        "message": "Persona encontrada",
-        "status": 200,
-        "respuesta": person
-    });
+    try {
+        const id_persona = parseInt(req.params.id_persona);
+        const response = yield database_1.pool.query('SELECT * FROM public.personas WHERE id_persona = $1', [id_persona]);
+        //console.log(response.rows[0]);
+        if (response.rowCount > 0) {
+            const person = response.rows[0];
+            return res.status(200).json({
+                "message": "Persona encontrada",
+                "status": 200,
+                "Respuesta": [person]
+            });
+        }
+        else {
+            return res.status(200).json({
+                "message": "Persona encontrada",
+                "status": 200,
+                "Respuesta": []
+            });
+        }
+    }
+    catch (_a) {
+        return res.status(500).json({
+            "message": "Error en el servidor",
+            "status": 500
+        });
+    }
 });
 exports.getUserById = getUserById;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -148,7 +164,10 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (e) {
         console.log(e);
-        return res.status(500).json({ "error": ["Ocurrió un error en el servidor."] });
+        return res.status(500).json({
+            "message": "Error en el servidor",
+            "status": 500
+        });
     }
 });
 exports.getUsers = getUsers;
