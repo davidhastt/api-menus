@@ -21,7 +21,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { correo, password } = req.body;
     try {
-        const userResult = yield database_1.pool.query('SELECT nombre, correo FROM personas WHERE correo = $1', [correo]);
+        const userResult = yield database_1.pool.query('SELECT nombre, correo, password FROM personas WHERE correo = $1', [correo]);
         // Resto del código...
         //sino existe el usuario
         if (userResult.rows.length === 0) {
@@ -53,10 +53,10 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         // Sign the token
         const token = jsonwebtoken_1.default.sign(payload, jwt_secret, {
-            expiresIn: '1h'
+            expiresIn: '3h'
         });
         return res.status(200).json({
-            "message": "Usuario aceptado en el sistema por una hora",
+            "message": "Usuario aceptado en el sistema por 3 horas",
             "status": 200,
             "JWT": token
         });

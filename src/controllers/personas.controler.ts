@@ -12,9 +12,12 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
     const { correo, password } = req.body; 
 
     try {
-        const userResult = await pool.query('SELECT nombre, correo FROM personas WHERE correo = $1', [correo]);
+        const userResult = await pool.query('SELECT nombre, correo, password FROM personas WHERE correo = $1', [correo]);
         // Resto del código...
         //sino existe el usuario
+
+
+
         if (userResult.rows.length === 0) {
             return res.status(404).json({
                 "message":"Usuario no encontrado",
@@ -22,8 +25,10 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
             });
         }
 
-        const user = userResult.rows[0];
+        const user:Persona = userResult.rows[0];
         const isPasswordCorrect = await argon2.verify(user.password, password);
+
+
         // si el password es incorrecto
         if (!isPasswordCorrect) {
             return res.status(401).json({
@@ -45,13 +50,13 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
               "status": 500,
             });
           }
-        
+          
         // Sign the token
         const token = jwt.sign(payload, jwt_secret, {
-        expiresIn: '1h'},);
+        expiresIn: '3h'},);
     
         return res.status(200).json({
-            "message":"Usuario aceptado en el sistema por una hora",
+            "message":"Usuario aceptado en el sistema por 3 horas",
             "status":200,
             "JWT": token
         });        
@@ -64,15 +69,12 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
           "status": 500,
           "error":"Error en el servidor"
         });
-
-
-        
-        
-
-
-
       }
 }
+
+
+
+
 
 
 export const createUser=async (req:Request, res:Response): Promise<Response>=>{//falta quitar el password de la respuesta
