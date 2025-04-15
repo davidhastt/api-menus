@@ -163,7 +163,7 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const personas = response.rows;
         console.log(personas);
         return res.status(200).json({
-            "message": "Persona encontrada",
+            "message": "Personas encontrada",
             "status": 200,
             "Respuesta": personas
         });

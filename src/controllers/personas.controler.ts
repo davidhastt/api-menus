@@ -49,7 +49,7 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
               "message": "Error interno del servidor, clave secreta no definida.",
               "status": 500,
             });
-          }
+        }
           
         // Sign the token
         const token = jwt.sign(payload, jwt_secret, {
@@ -186,7 +186,7 @@ export const getUsers= async(req:Request, res:Response): Promise<Response>=>{
         const personas:Persona[]=response.rows;
         console.log(personas);
         return res.status(200).json({
-            "message":"Persona encontrada",
+            "message":"Personas encontrada",
             "status":200,
             "Respuesta": personas
         });             
