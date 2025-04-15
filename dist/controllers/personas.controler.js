@@ -113,7 +113,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         yield database_1.pool.query('UPDATE public.personas SET tipo = $1, nombre = $2, apaterno = $3, amaterno = $4, fechaNac = $5, telefono = $6, correo= $7 WHERE id_persona = $8', [person.tipo, person.nombre, person.apaterno, person.amaterno, person.fechaNac, person.telefono, person.correo, person.id_persona]);
         console.log(`La persona con id_perona =  ${person.id_persona} fue actualizada`);
         return res.status(200).json({
-            "message": "La persona con fue actualizada",
+            "message": "La persona fue actualizada",
             "status": 200
         });
     }

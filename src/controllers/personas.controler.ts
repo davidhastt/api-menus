@@ -123,17 +123,14 @@ export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
 
 export const updateUser=async (req:Request, res:Response): Promise<Response>=>{
 //falta validar que la persona con el id recibido exista
-
-
     const person:Persona= req.body;
     person.id_persona=parseInt(req.params.id_persona);
-
     
         try{
             await pool.query('UPDATE public.personas SET tipo = $1, nombre = $2, apaterno = $3, amaterno = $4, fechaNac = $5, telefono = $6, correo= $7 WHERE id_persona = $8', [person.tipo, person.nombre, person.apaterno, person.amaterno, person.fechaNac, person.telefono, person.correo, person.id_persona]);
             console.log(`La persona con id_perona =  ${person.id_persona} fue actualizada`);
             return res.status(200).json({
-                "message":"La persona con fue actualizada",
+                "message":"La persona fue actualizada",
                 "status":200
             });            
         }

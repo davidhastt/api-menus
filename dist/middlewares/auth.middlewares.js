@@ -23,7 +23,7 @@ const authMiddleware = (req, res, next) => {
             });
         }
         const decoded = jsonwebtoken_1.default.verify(token, jwt_secret);
-        console.log("Decodificado", decoded);
+        console.log("Nos visita", decoded);
         //req.user = decoded; // Adjuntar la info del usuario al objeto de solicitud
         next(); // Continuar con la siguiente función (controlador)
     }

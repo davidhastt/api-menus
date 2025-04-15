@@ -22,7 +22,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
             });
         }
         const decoded = jwt.verify(token, jwt_secret);
-        console.log("Decodificado", decoded);
+        console.log("Nos visita", decoded);
         //req.user = decoded; // Adjuntar la info del usuario al objeto de solicitud
         next(); // Continuar con la siguiente función (controlador)
     } catch (error) {
