@@ -11,21 +11,58 @@ export const nueva=async (req:Request, res:Response): Promise<Response>=>{//falt
 
     let newConstruccion: Construccion= req.body;
 
-    try{        
-        const response: QueryResult = await pool.query(
-            'INSERT INTO public.construcciones (id_persona, tema, subtema, concepto, geom) VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 4326))',
-            [newConstruccion.id_persona, newConstruccion.tema, newConstruccion.subtema, newConstruccion.concepto, 'POINT('+newConstruccion.coordinates[0]+' '+newConstruccion.coordinates[1]+')']
+    try{    
+        //insertamos la construccion    
+        let respuesta: QueryResult = await pool.query(
+            'INSERT INTO public.construcciones (id_persona, tema, subtema, concepto, geom) VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 4326)) RETURNING public.construcciones.id_construccion',
+            [newConstruccion.id_persona, newConstruccion.tema, newConstruccion.subtema, newConstruccion.concepto, 'POINT('+ newConstruccion.coordinates[0]+' '+ newConstruccion.coordinates[1]+')']
         );
 
+        //insertamos el nombre de edificio
 
-        return res.json({
+        
+        const id_construccion:number = respuesta.rows[0].id_construccion; //obtenemos el ultimo id insertado
+
+
+
+        respuesta = await pool.query(
+            'INSERT INTO public.nombres_edificios (id_construccion, nombre) VALUES ($1, $2)',
+            [id_construccion, newConstruccion.nombre]
+        );        
+
+
+
+
+        for (const direccion of newConstruccion.direcciones) {
+            respuesta = await pool.query(
+                'INSERT INTO public.direcciones (id_construccion, direccion) VALUES ($1, $2)',
+                [id_construccion, direccion]
+            );
+          }
+
+
+          for (const corte of newConstruccion.cortes) {
+            respuesta = await pool.query(
+                'INSERT INTO public.cortes (id_construccion, año) VALUES ($1, $2)',
+                [id_construccion, corte]
+            );
+          }          
+
+
+          
+
+            return res.json({
             message: 'La construccion se creo satisfactoriamente',
             body:{
                 construccion:{
                     newConstruccion                    
                 }
             }
-        });
+            });
+
+
+
+
     }
     catch(e){
         console.error(e);    

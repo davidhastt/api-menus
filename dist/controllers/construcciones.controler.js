@@ -14,7 +14,17 @@ const database_1 = require("../database");
 const nueva = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let newConstruccion = req.body;
     try {
-        const response = yield database_1.pool.query('INSERT INTO public.construcciones (id_persona, tema, subtema, concepto, geom) VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 4326))', [newConstruccion.id_persona, newConstruccion.tema, newConstruccion.subtema, newConstruccion.concepto, 'POINT(' + newConstruccion.coordinates[0] + ' ' + newConstruccion.coordinates[1] + ')']);
+        //insertamos la construccion    
+        let respuesta = yield database_1.pool.query('INSERT INTO public.construcciones (id_persona, tema, subtema, concepto, geom) VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 4326)) RETURNING public.construcciones.id_construccion', [newConstruccion.id_persona, newConstruccion.tema, newConstruccion.subtema, newConstruccion.concepto, 'POINT(' + newConstruccion.coordinates[0] + ' ' + newConstruccion.coordinates[1] + ')']);
+        //insertamos el nombre de edificio
+        const id_construccion = respuesta.rows[0].id_construccion; //obtenemos el ultimo id insertado
+        respuesta = yield database_1.pool.query('INSERT INTO public.nombres_edificios (id_construccion, nombre) VALUES ($1, $2)', [id_construccion, newConstruccion.nombre]);
+        for (const direccion of newConstruccion.direcciones) {
+            respuesta = yield database_1.pool.query('INSERT INTO public.direcciones (id_construccion, direccion) VALUES ($1, $2)', [id_construccion, direccion]);
+        }
+        for (const corte of newConstruccion.cortes) {
+            respuesta = yield database_1.pool.query('INSERT INTO public.cortes (id_construccion, año) VALUES ($1, $2)', [id_construccion, corte]);
+        }
         return res.json({
             message: 'La construccion se creo satisfactoriamente',
             body: {

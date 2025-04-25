@@ -4,5 +4,8 @@ export interface Construccion {
     tema: number;
     subtema: number;
     concepto: number;
-    coordinates: [number, number]
+    coordinates: [number, number],
+    nombre: string,
+    direcciones: string[],
+    cortes: string[]
 }
