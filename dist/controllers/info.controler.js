@@ -13,12 +13,14 @@ exports.pruebaConexionDB = exports.getInfo = void 0;
 const database_1 = require("../database");
 const getInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
+    //esto es lo que aparece en el  navegador
     return res.status(200).json({
         "mensaje": "Bienvenido; a continuacion se muestra en formato JSON el menu de endpoints disponibles",
         "status": 200,
         "endpoints": [
             { "pruebaConexion": `${url}pruebaConexion` },
-            { "personas": `${url}personas/` }
+            { "personas": `${url}personas/` },
+            { "construcciones": `${url}construcciones` }
         ]
     });
 });
