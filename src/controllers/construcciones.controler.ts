@@ -1,10 +1,31 @@
 import { Request, Response } from "express";
 import { QueryResult } from "pg";
 import { pool } from "../database";
-import argon2 from 'argon2';
-import jwt, { Secret } from 'jsonwebtoken';
+import { Construccion } from "../interfaces/construcciones.interface";
 
-import {Construccion} from "../interfaces/construcciones.interface";
+
+export const getConstrucciones= async(req:Request, res:Response): Promise<Response>=>{
+    try{
+        const response: QueryResult= await pool.query('SELECT construcciones.id_construccion, public.construcciones.concepto, public.nombres_edificios.nombre, ARRAY[ST_X(public.construcciones.geom), ST_Y(public.construcciones.geom)] AS coordinates FROM public.construcciones INNER JOIN public.nombres_edificios ON public.construcciones.id_construccion = public.nombres_edificios.id_construccion ORDER BY id_construccion ASC;');
+        const construcciones:Construccion[]=response.rows;
+        console.log(construcciones);
+        return res.status(200).json({
+            "message":"Construcciones encontradas",
+            "status":200,
+            "Respuesta": construcciones
+        });             
+
+    }
+    catch(e){
+        console.log(e);    
+        return res.status(500).json({
+            "message":"Error en el servidor",
+            "status":500
+        });
+    }
+    
+}
+
 
 
 export const nueva=async (req:Request, res:Response): Promise<Response>=>{//falta quitar el password de la respuesta
@@ -19,11 +40,8 @@ export const nueva=async (req:Request, res:Response): Promise<Response>=>{//falt
         );
 
         //insertamos el nombre de edificio
-
         
         const id_construccion:number = respuesta.rows[0].id_construccion; //obtenemos el ultimo id insertado
-
-
 
         respuesta = await pool.query(
             'INSERT INTO public.nombres_edificios (id_construccion, nombre) VALUES ($1, $2)',
@@ -41,15 +59,12 @@ export const nueva=async (req:Request, res:Response): Promise<Response>=>{//falt
           }
 
 
-          for (const corte of newConstruccion.cortes) {
+          for (const corte of newConstruccion.años) {
             respuesta = await pool.query(
                 'INSERT INTO public.cortes (id_construccion, año) VALUES ($1, $2)',
                 [id_construccion, corte]
             );
           }          
-
-
-          
 
             return res.json({
             message: 'La construccion se creo satisfactoriamente',
@@ -59,10 +74,6 @@ export const nueva=async (req:Request, res:Response): Promise<Response>=>{//falt
                 }
             }
             });
-
-
-
-
     }
     catch(e){
         console.error(e);    

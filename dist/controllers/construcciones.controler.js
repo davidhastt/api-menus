@@ -9,8 +9,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.construccionesInfo = exports.nueva = void 0;
+exports.construccionesInfo = exports.nueva = exports.getConstrucciones = void 0;
 const database_1 = require("../database");
+const getConstrucciones = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield database_1.pool.query('SELECT construcciones.id_construccion, public.construcciones.concepto, public.nombres_edificios.nombre, ARRAY[ST_X(public.construcciones.geom), ST_Y(public.construcciones.geom)] AS coordinates FROM public.construcciones INNER JOIN public.nombres_edificios ON public.construcciones.id_construccion = public.nombres_edificios.id_construccion ORDER BY id_construccion ASC;');
+        const construcciones = response.rows;
+        console.log(construcciones);
+        return res.status(200).json({
+            "message": "Construcciones encontradas",
+            "status": 200,
+            "Respuesta": construcciones
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            "message": "Error en el servidor",
+            "status": 500
+        });
+    }
+});
+exports.getConstrucciones = getConstrucciones;
 const nueva = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let newConstruccion = req.body;
     try {
@@ -22,7 +42,7 @@ const nueva = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         for (const direccion of newConstruccion.direcciones) {
             respuesta = yield database_1.pool.query('INSERT INTO public.direcciones (id_construccion, direccion) VALUES ($1, $2)', [id_construccion, direccion]);
         }
-        for (const corte of newConstruccion.cortes) {
+        for (const corte of newConstruccion.años) {
             respuesta = yield database_1.pool.query('INSERT INTO public.cortes (id_construccion, año) VALUES ($1, $2)', [id_construccion, corte]);
         }
         return res.json({

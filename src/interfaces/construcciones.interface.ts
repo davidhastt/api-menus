@@ -3,9 +3,9 @@ export interface Construccion {
     id_persona: number;
     tema: number;
     subtema: number;
-    concepto: number;
-    coordinates: [number, number],
+    concepto: number;    
     nombre: string,
+    años: string[]
     direcciones: string[],
-    cortes: string[]
+    coordinates: [number, number],
 }

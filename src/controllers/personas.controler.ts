@@ -52,8 +52,7 @@ export const login= async (req:Request, res:Response): Promise<Response>=>{
         }
           
         // Sign the token
-        const token = jwt.sign(payload, jwt_secret, {
-        expiresIn: '3h'},);
+        const token = jwt.sign(payload, jwt_secret, {expiresIn: '3h'},);
     
         return res.status(200).json({
             "message":"Usuario aceptado en el sistema por 3 horas",
@@ -109,6 +108,8 @@ export const createUser=async (req:Request, res:Response): Promise<Response>=>{/
 
 export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
     const id_persona = parseInt(req.params.id_persona);
+
+    try{
     await pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
     //return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado`});
     console.log(`La persona con id_persona = ${id_persona} fue eliminada`)
@@ -116,7 +117,11 @@ export const deleteUser=async (req:Request, res:Response): Promise<Response>=>{
         "message":"La persona con fue eliminada",
         "status":200
     }); 
-
+    }
+    catch(e){
+        console.log(e);    
+        return res.status(500).json({"error": ["Ocurrió un error en el servidor."]});
+    } 
     //console.log(req.params.id);
     //res.send('deleting');
 }

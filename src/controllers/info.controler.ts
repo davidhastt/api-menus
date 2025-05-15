@@ -4,7 +4,7 @@ import { pool } from "../database";
 
 
 
-export const getInfo=async(req:Request, res:Response):Promise<Response>=>{
+export const getInfo=async(req:Request, res:Response):Promise<Response>=>{// en esta funcion debes colocar los endpoint
 
     let url = req.protocol + '://' + req.get('host') + req.originalUrl;
 

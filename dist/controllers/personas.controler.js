@@ -52,9 +52,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
         // Sign the token
-        const token = jsonwebtoken_1.default.sign(payload, jwt_secret, {
-            expiresIn: '3h'
-        });
+        const token = jsonwebtoken_1.default.sign(payload, jwt_secret, { expiresIn: '3h' });
         return res.status(200).json({
             "message": "Usuario aceptado en el sistema por 3 horas",
             "status": 200,
@@ -94,13 +92,19 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.createUser = createUser;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id_persona = parseInt(req.params.id_persona);
-    yield database_1.pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
-    //return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado`});
-    console.log(`La persona con id_persona = ${id_persona} fue eliminada`);
-    return res.status(200).json({
-        "message": "La persona con fue eliminada",
-        "status": 200
-    });
+    try {
+        yield database_1.pool.query('DELETE FROM public.personas WHERE id_persona=$1', [id_persona]);
+        //return res.json({"Mensaje": `La persona con id_perona =  ${id_persona} fue eliminado`});
+        console.log(`La persona con id_persona = ${id_persona} fue eliminada`);
+        return res.status(200).json({
+            "message": "La persona con fue eliminada",
+            "status": 200
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ "error": ["Ocurrió un error en el servidor."] });
+    }
     //console.log(req.params.id);
     //res.send('deleting');
 });
