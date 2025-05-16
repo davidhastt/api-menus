@@ -66,7 +66,7 @@ const nueva = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let newConstruccion = req.body;
     try {
         //insertamos la construccion    
-        let respuesta = yield database_1.pool.query('INSERT INTO public.construcciones (id_persona, tema, subtema, concepto, geom) VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 4326)) RETURNING public.construcciones.id_construccion', [newConstruccion.id_persona, newConstruccion.tema, newConstruccion.subtema, newConstruccion.concepto, 'POINT(' + newConstruccion.coordinates[0] + ' ' + newConstruccion.coordinates[1] + ')']);
+        let respuesta = yield database_1.pool.query('INSERT INTO public.construcciones (id_persona, tema, subtema, concepto, geom, cve_agee) VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 4326), $6) RETURNING public.construcciones.id_construccion', [newConstruccion.id_persona, newConstruccion.tema, newConstruccion.subtema, newConstruccion.concepto, 'POINT(' + newConstruccion.coordinates[0] + ' ' + newConstruccion.coordinates[1] + ')', newConstruccion.cve_agee]);
         //insertamos el nombre de edificio
         const id_construccion = respuesta.rows[0].id_construccion; //obtenemos el ultimo id insertado
         respuesta = yield database_1.pool.query('INSERT INTO public.nombres_edificios (id_construccion, nombre) VALUES ($1, $2)', [id_construccion, newConstruccion.nombre]);

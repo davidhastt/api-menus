@@ -74,8 +74,8 @@ export const nueva=async (req:Request, res:Response): Promise<Response>=>{//falt
     try{    
         //insertamos la construccion    
         let respuesta: QueryResult = await pool.query(
-            'INSERT INTO public.construcciones (id_persona, tema, subtema, concepto, geom) VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 4326)) RETURNING public.construcciones.id_construccion',
-            [newConstruccion.id_persona, newConstruccion.tema, newConstruccion.subtema, newConstruccion.concepto, 'POINT('+ newConstruccion.coordinates[0]+' '+ newConstruccion.coordinates[1]+')']
+            'INSERT INTO public.construcciones (id_persona, tema, subtema, concepto, geom, cve_agee) VALUES ($1, $2, $3, $4, ST_GeomFromText($5, 4326), $6) RETURNING public.construcciones.id_construccion',
+            [newConstruccion.id_persona, newConstruccion.tema, newConstruccion.subtema, newConstruccion.concepto, 'POINT('+ newConstruccion.coordinates[0]+' '+ newConstruccion.coordinates[1]+')', newConstruccion.cve_agee]
         );
 
         //insertamos el nombre de edificio
