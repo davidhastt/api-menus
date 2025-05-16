@@ -4,6 +4,45 @@ import { pool } from "../database";
 import { Construccion } from "../interfaces/construcciones.interface";
 
 
+
+export const getConstruccionesByAGEE=async (req:Request, res:Response): Promise<Response>=>{
+    //console.log(req.params.id);
+    //res.send('recived');
+    try{
+        const cve_agee = parseInt(req.params.cve_agee);
+        const response: QueryResult= await pool.query('SELECT public.construcciones.cve_agee, public.construcciones.id_construccion, public.construcciones.concepto, public.nombres_edificios.nombre, ARRAY[ST_X(public.construcciones.geom), ST_Y(public.construcciones.geom)] AS coordinates FROM public.construcciones INNER JOIN public.nombres_edificios ON public.construcciones.id_construccion = public.nombres_edificios.id_construccion WHERE public.construcciones.cve_agee = $1 ORDER BY id_construccion ASC;', [cve_agee]);
+        //console.log(response.rows[0]);
+
+        if (response.rowCount > 0){
+            const construcciones:Construccion[]=response.rows;
+            return res.status(200).json({
+                "message":"Construcciones encontradas",
+                "status":200,
+                "Respuesta": [construcciones]
+            });             
+        }
+        else{
+            return res.status(200).json({
+                "message":"Construcciones encontradas",
+                "status":200,
+                "Respuesta": []
+            }); 
+        }
+    }
+    catch{
+        return res.status(500).json({
+            "message":"Error en el servidor",
+            "status":500
+        });
+    }
+}
+
+
+
+
+
+
+
 export const getConstrucciones= async(req:Request, res:Response): Promise<Response>=>{
     try{
         const response: QueryResult= await pool.query('SELECT construcciones.id_construccion, public.construcciones.concepto, public.nombres_edificios.nombre, ARRAY[ST_X(public.construcciones.geom), ST_Y(public.construcciones.geom)] AS coordinates FROM public.construcciones INNER JOIN public.nombres_edificios ON public.construcciones.id_construccion = public.nombres_edificios.id_construccion ORDER BY id_construccion ASC;');

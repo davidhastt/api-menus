@@ -9,8 +9,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.construccionesInfo = exports.nueva = exports.getConstrucciones = void 0;
+exports.construccionesInfo = exports.nueva = exports.getConstrucciones = exports.getConstruccionesByAGEE = void 0;
 const database_1 = require("../database");
+const getConstruccionesByAGEE = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //console.log(req.params.id);
+    //res.send('recived');
+    try {
+        const cve_agee = parseInt(req.params.cve_agee);
+        const response = yield database_1.pool.query('SELECT public.construcciones.cve_agee, public.construcciones.id_construccion, public.construcciones.concepto, public.nombres_edificios.nombre, ARRAY[ST_X(public.construcciones.geom), ST_Y(public.construcciones.geom)] AS coordinates FROM public.construcciones INNER JOIN public.nombres_edificios ON public.construcciones.id_construccion = public.nombres_edificios.id_construccion WHERE public.construcciones.cve_agee = $1 ORDER BY id_construccion ASC;', [cve_agee]);
+        //console.log(response.rows[0]);
+        if (response.rowCount > 0) {
+            const construcciones = response.rows;
+            return res.status(200).json({
+                "message": "Construcciones encontradas",
+                "status": 200,
+                "Respuesta": [construcciones]
+            });
+        }
+        else {
+            return res.status(200).json({
+                "message": "Construcciones encontradas",
+                "status": 200,
+                "Respuesta": []
+            });
+        }
+    }
+    catch (_a) {
+        return res.status(500).json({
+            "message": "Error en el servidor",
+            "status": 500
+        });
+    }
+});
+exports.getConstruccionesByAGEE = getConstruccionesByAGEE;
 const getConstrucciones = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield database_1.pool.query('SELECT construcciones.id_construccion, public.construcciones.concepto, public.nombres_edificios.nombre, ARRAY[ST_X(public.construcciones.geom), ST_Y(public.construcciones.geom)] AS coordinates FROM public.construcciones INNER JOIN public.nombres_edificios ON public.construcciones.id_construccion = public.nombres_edificios.id_construccion ORDER BY id_construccion ASC;');
